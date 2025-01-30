@@ -1,15 +1,12 @@
-﻿using Assets.Scripts.Logic.Level.Unity.Grid;
-using System;
-using System.Collections;
-using UnityEngine;
+﻿using System;
+using Data.Interfaces.Models.Level;
+using Logic.Unity.Level.Grid;
 
-namespace Assets.Scripts.Logic.Interfaces.Services.Level.Grid
+namespace Logic.Interfaces.Services.Level.Grid
 {
 	public interface IGridController 
 	{
-		Cell[] Cells { get; }
-
-		event Action GridReadyEvent;
+		ICell[] Cells { get; }
 
 		void Initialize();
 	}

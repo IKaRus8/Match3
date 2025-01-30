@@ -1,23 +1,26 @@
-using Assets.Scripts.Logic.Interfaces.Services;
+using Logic.Interfaces.Services;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-[RequireComponent (typeof(Button))]
-public class PlayButton : MonoBehaviour
+namespace UI
 {
-	[Inject]
-	private readonly ISceneLoadService _sceneLoadService;
-
-	private void Awake()
+	[RequireComponent (typeof(Button))]
+	public class PlayButton : MonoBehaviour
 	{
-		var button = GetComponent<Button>();
+		[Inject]
+		private readonly ISceneLoadService _sceneLoadService;
 
-		button.onClick.AddListener(StartLevel);
-	}
+		private void Awake()
+		{
+			var button = GetComponent<Button>();
 
-	private void StartLevel()
-	{
-		_sceneLoadService.LoadLevelScene();
+			button.onClick.AddListener(StartLevel);
+		}
+
+		private void StartLevel()
+		{
+			_sceneLoadService.LoadLevelScene();
+		}
 	}
 }

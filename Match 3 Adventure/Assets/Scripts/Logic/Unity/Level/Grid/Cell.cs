@@ -1,24 +1,45 @@
-﻿using Sirenix.OdinInspector;
+﻿using Data;
+using Data.Interfaces.Models.Level;
 using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace Assets.Scripts.Logic.Level.Unity.Grid
+namespace Logic.Unity.Level.Grid
 {
-	public class Cell : MonoBehaviour
+	public class Cell : NetworkBehaviour, ICell
 	{
-		private BaseCrystal _crystal;
+		private ICrystal _crystal;
 
-		[ShowInInspector]
-		public int2 Index { get; set; }
+		[SerializeField]
+		private int2 _index;
 
-		public void SetCrystal(BaseCrystal crystal)
+		public int2 Index
+		{
+			get => _index;
+			set => _index = value;
+		}
+		public ICrystal Content => _crystal;
+		public bool IsEmpty => _crystal == null;
+		public CrystalTypeEnum CrystalType => GetCrystalType();
+
+		public void SetCrystal(ICrystal crystal)
 		{
 			_crystal = crystal;
 		}
 
-		public bool IsEmpty()
+		private CrystalTypeEnum GetCrystalType()
 		{
-			return _crystal == null;
+			if (_crystal == null)
+			{
+				return CrystalTypeEnum.None;
+			}
+			
+			return _crystal.CrystalType;
+		}
+
+		public override string ToString()
+		{
+			return $"Cell [{_index.x}, {_index.y}] is {CrystalType}";
 		}
 	}
 }

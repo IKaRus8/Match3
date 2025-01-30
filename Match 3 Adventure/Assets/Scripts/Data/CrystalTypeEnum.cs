@@ -1,9 +1,10 @@
-using UnityEngine;
-
-public enum CrystalTypeEnum
+namespace Data
 {
-    None,
-    Color_red,
-    Color_green,
-    Color_blue,
+    public enum CrystalTypeEnum
+    {
+        None,
+        ColorRed,
+        ColorGreen,
+        ColorYellow,
+    }
 }

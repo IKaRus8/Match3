@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Utilities.Extensions
+namespace Extensions
 {
     public static class StringExtensions
     {

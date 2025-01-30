@@ -1,24 +1,23 @@
-﻿
-using Assets.Scripts.Logic.Interfaces.Providers.Level;
-using Assets.Scripts.Logic.Interfaces.Services.Level.Grid;
-using Assets.Scripts.Logic.Services.Level.Grid;
+﻿using Cysharp.Threading.Tasks;
+using Logic.Interfaces.Providers.Level;
+using Logic.Interfaces.Services.Level.Grid;
 using Unity.Netcode;
 using UnityEngine;
 using Zenject;
 
-namespace Assets.Scripts.Logic.Services.Level
+namespace Logic.Services.Level
 {
 	public class LevelBootstrapper : NetworkBehaviour
 	{
 		private IGridController _gridController;
 		private ICellsProvider _cellsProvider;
-		private CrystalMatchObserver _crystalMatchObserver;
+		private ICrystalMatchObserver _crystalMatchObserver;
 
 		[Inject]
 		private void Construct(
 			IGridController gridController,
 			ICellsProvider cellsProvider,
-			CrystalMatchObserver crystalMatchObserver)
+			ICrystalMatchObserver crystalMatchObserver)
 		{
 			_gridController = gridController;
 			_cellsProvider = cellsProvider;
@@ -36,9 +35,18 @@ namespace Assets.Scripts.Logic.Services.Level
 
 			Debug.Log("[Conection] Server Start");
 
+			ServerInitialization().Forget();
+		}
+
+		private async UniTaskVoid ServerInitialization()
+		{
 			_gridController.Initialize();
 
+			await UniTask.Yield();
+
 			_cellsProvider.Initialize(_gridController.Cells);
+
+			await UniTask.Yield();
 
 			_crystalMatchObserver.Initialize();
 		}

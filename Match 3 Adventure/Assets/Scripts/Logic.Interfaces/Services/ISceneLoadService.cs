@@ -1,7 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
-
-namespace Assets.Scripts.Logic.Interfaces.Services
+﻿namespace Logic.Interfaces.Services
 {
 	public interface ISceneLoadService
 	{

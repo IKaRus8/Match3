@@ -1,10 +1,8 @@
-﻿using Assets.Scripts.Logic.Interfaces.Services;
-using Assets.Scripts.Logic.Services;
-using System.Collections;
-using UnityEngine;
+﻿using Logic.Interfaces.Services;
+using Logic.Services;
 using Zenject;
 
-namespace Assets.Scripts.Logic.Installers
+namespace Logic.Installers
 {
 	public class ProjectContextInstaller : MonoInstaller<ProjectContextInstaller>		
 	{

@@ -1,11 +1,21 @@
-﻿using Unity.Netcode;
-using UnityEditor;
+﻿using Cysharp.Threading.Tasks;
+using Data;
+using Data.Interfaces.Models.Level;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace Assets.Scripts.Logic.Level.Unity.Grid
+namespace Logic.Unity.Level.Crystals
 {
-	public class BaseCrystal : NetworkBehaviour
+	public class BaseCrystal : NetworkBehaviour, ICrystal
 	{
-		
+		[SerializeField]
+		protected CrystalTypeEnum _crystalType;
+
+		public CrystalTypeEnum CrystalType => _crystalType;
+
+		public async UniTask Move(Vector3 position)
+		{
+			
+		}
 	}
 }

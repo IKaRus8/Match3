@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Scripts.Logic.Level.Unity.Grid
+namespace Logic.Unity.Level.Grid
 {
 	public class GridFiller : MonoBehaviour
 	{

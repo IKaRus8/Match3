@@ -1,59 +1,50 @@
-using Assets.Scripts.Logic.Interfaces.Services.Level.Grid;
-using Assets.Scripts.Logic.Level.Unity.Grid;
-using Sirenix.OdinInspector;
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using Data.Interfaces.Models.Level;
+using Extensions;
+using Logic.Interfaces.Services.Level.Grid;
 using Unity.Netcode;
 using UnityEngine;
-using Utilities.Extensions;
 
-public class GridController : NetworkBehaviour, IGridController
+namespace Logic.Unity.Level.Grid
 {
-	[SerializeField]
-	private NetworkObject[] _crystalPrefabs;
-
-	private Cell[] _cells;
-
-	public Cell[] Cells => _cells;
-
-	public event Action GridReadyEvent;
-
-	public void Initialize()
+	public class GridController : NetworkBehaviour, IGridController
 	{
-		_cells = GetComponentsInChildren<Cell>();
+		[SerializeField]
+		private NetworkObject[] _crystalPrefabs;
 
-		foreach (var cell in _cells) 
+		private Cell[] _cells;
+
+		public ICell[] Cells => _cells;
+
+		public void Initialize()
 		{
-			if (cell.IsEmpty())
+			_cells = GetComponentsInChildren<Cell>();
+
+			foreach (var cell in _cells) 
 			{
-				CreateRandomCrystal(cell);
+				if (cell.IsEmpty)
+				{
+					CreateRandomCrystal(cell);
+				}
 			}
 		}
-	}
 
-	private void CreateRandomCrystal(Cell cell)
-	{
-		var cellPrefab = _crystalPrefabs.RandomElement();
+		private void CreateRandomCrystal(Cell cell)
+		{
+			//cell.GetComponent<NetworkObject>().Spawn();
+			
+			var crystalPrefab = _crystalPrefabs.RandomElement();
 
-		var cellNetworkObject = NetworkManager.SpawnManager.InstantiateAndSpawn(cellPrefab);
+			var crystalNetworkObject = NetworkManager.SpawnManager.InstantiateAndSpawn(crystalPrefab);
 
-		cellNetworkObject.transform.SetParent(cell.transform, false);
-		cell.SetCrystal(cellNetworkObject.GetComponent<BaseCrystal>());
+			crystalNetworkObject.TrySetParent(cell.NetworkObject);
+			crystalNetworkObject.transform.localPosition = Vector3.zero;
+			cell.SetCrystal(crystalNetworkObject.GetComponent<ICrystal>());
+		}
 
-		OnGridReadyRpc();
-	}
-
-	private Cell GetEmptyCell()
-	{
-		return _cells.FirstOrDefault(c => c.IsEmpty());
-	}
-
-	[Rpc(SendTo.ClientsAndHost)]
-	private void OnGridReadyRpc()
-	{
-		Debug.Log("[Grid] Grid Ready");
-
-		GridReadyEvent?.Invoke();
+		private Cell GetEmptyCell()
+		{
+			return _cells.FirstOrDefault(c => c.IsEmpty);
+		}
 	}
 }

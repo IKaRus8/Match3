@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-namespace Utilities.Extensions
+namespace Extensions
 {
     public static class UnityExtensions
     {

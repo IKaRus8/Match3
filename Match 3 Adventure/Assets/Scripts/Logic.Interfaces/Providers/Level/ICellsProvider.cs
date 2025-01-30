@@ -1,18 +1,17 @@
-﻿using Assets.Scripts.Logic.Level.Unity.Grid;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using Data.Interfaces.Models.Level;
+using Logic.Unity.Level.Grid;
 
-namespace Assets.Scripts.Logic.Interfaces.Providers.Level
+namespace Logic.Interfaces.Providers.Level
 {
 	public interface ICellsProvider
 	{
-		List<Cell> GetCellsInColumn(int x);
-		List<Cell> GetCellsInRow(int y);
+		List<ICell> GetCellsInColumn(int x);
+		List<ICell> GetCellsInRow(int y);
 
-		IAsyncEnumerable<List<Cell>> GetAllColumnsAsync();
-		IAsyncEnumerable<List<Cell>> GetAllRowsAsync();
+		IAsyncEnumerable<List<ICell>> GetAllColumnsAsync();
+		IAsyncEnumerable<List<ICell>> GetAllRowsAsync();
 
-		void Initialize(Cell[] cells);
+		void Initialize(ICell[] cells);
 	}
 }

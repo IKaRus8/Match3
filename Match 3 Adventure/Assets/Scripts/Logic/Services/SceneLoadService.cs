@@ -1,8 +1,7 @@
-﻿using Assets.Scripts.Logic.Interfaces.Services;
-using UnityEngine;
+﻿using Logic.Interfaces.Services;
 using UnityEngine.SceneManagement;
 
-namespace Assets.Scripts.Logic.Services
+namespace Logic.Services
 {
 	public class SceneLoadService : ISceneLoadService
 	{
