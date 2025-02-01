@@ -1,50 +1,45 @@
+using System.Collections.Generic;
 using System.Linq;
 using Data.Interfaces.Models.Level;
-using Extensions;
+using Logic.Interfaces.Providers.Level.Grid;
 using Logic.Interfaces.Services.Level.Grid;
 using Unity.Netcode;
-using UnityEngine;
+using Zenject;
 
 namespace Logic.Unity.Level.Grid
 {
 	public class GridController : NetworkBehaviour, IGridController
 	{
-		[SerializeField]
-		private NetworkObject[] _crystalPrefabs;
+		private ICrystalsProvider _crystalsProvider;
 
-		private Cell[] _cells;
-
-		public ICell[] Cells => _cells;
-
-		public void Initialize()
+		[Inject]
+		private void Construct(ICrystalsProvider crystalsProvider)
 		{
-			_cells = GetComponentsInChildren<Cell>();
+			_crystalsProvider = crystalsProvider;
+		}
 
-			foreach (var cell in _cells) 
+		public List<ICell> Initialize()
+		{
+			var cells = GetComponentsInChildren<ICell>().ToList();
+
+			foreach (var cell in cells) 
 			{
 				if (cell.IsEmpty)
 				{
 					CreateRandomCrystal(cell);
 				}
 			}
+
+			return cells;
 		}
 
-		private void CreateRandomCrystal(Cell cell)
+		private void CreateRandomCrystal(ICell cell)
 		{
-			//cell.GetComponent<NetworkObject>().Spawn();
-			
-			var crystalPrefab = _crystalPrefabs.RandomElement();
+			var crystalPrefab = _crystalsProvider.GetRandomCrystalPrefab();
 
 			var crystalNetworkObject = NetworkManager.SpawnManager.InstantiateAndSpawn(crystalPrefab);
 
-			crystalNetworkObject.TrySetParent(cell.NetworkObject);
-			crystalNetworkObject.transform.localPosition = Vector3.zero;
 			cell.SetCrystal(crystalNetworkObject.GetComponent<ICrystal>());
-		}
-
-		private Cell GetEmptyCell()
-		{
-			return _cells.FirstOrDefault(c => c.IsEmpty);
 		}
 	}
 }

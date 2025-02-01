@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Data;
+using Data.Enums;
 using Data.Interfaces.Models.Level;
-using Logic.Interfaces.Providers.Level;
+using Logic.Interfaces.Providers.Level.Grid;
 using Logic.Interfaces.Services.Level.Grid;
-using UniRx;
 using UnityEngine;
 
 namespace Logic.Services.Level.Grid

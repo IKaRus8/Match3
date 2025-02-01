@@ -1,4 +1,5 @@
 using Data.Interfaces.Models.Level;
+using Logic.Interfaces.Services.Level.Grid;
 using UniRx;
 using UnityEngine;
 using Observable = UniRx.Observable;
@@ -8,10 +9,14 @@ namespace Logic.Services.Level.Grid
     public class CellTouchObserver
     {
         private readonly Camera _camera;
+        private readonly ICrystalMoveService _crystalMoveService;
 
-        public CellTouchObserver(Camera camera)
+        public CellTouchObserver(
+            Camera camera,
+            ICrystalMoveService crystalMoveService)
         {
             _camera = camera;
+            _crystalMoveService = crystalMoveService;
 
             Observable.EveryUpdate().Subscribe(CheckTouch);
         }
@@ -29,6 +34,8 @@ namespace Logic.Services.Level.Grid
                     var cell = hit.collider.GetComponent<ICell>();
                     
                     Debug.Log($"Объект нажат: {cell}");
+                    
+                    _crystalMoveService.CellSelected(cell);
                 }
             }
         }

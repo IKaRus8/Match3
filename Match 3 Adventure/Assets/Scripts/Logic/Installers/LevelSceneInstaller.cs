@@ -1,9 +1,7 @@
-using Logic.Interfaces.Providers.Level;
+using Logic.Interfaces.Providers.Level.Grid;
 using Logic.Interfaces.Services.Level.Grid;
 using Logic.Providers.Level.Grid;
-using Logic.Services.Level;
 using Logic.Services.Level.Grid;
-using Logic.Unity.Level.Grid;
 using UnityEngine;
 using Zenject;
 
@@ -21,11 +19,17 @@ namespace Logic.Installers
                 .FromComponentInHierarchy()
                 .AsSingle();
             Container.BindInstance(_mainCamera).AsSingle();
+            Container.Bind<ICrystalMoveService>()
+                .FromComponentInHierarchy()
+                .AsSingle();
             
             //Services
             Container.Bind<ICrystalMatchObserver>().To<CrystalMatchObserver>().AsSingle();
-            Container.Bind<ICellsProvider>().To<CellsProvider>().AsSingle();
             Container.Bind<CellTouchObserver>().AsSingle().NonLazy();
+            
+            //Providers
+            Container.Bind<ICrystalsProvider>().To<CrystalsProvider>().AsSingle();
+            Container.Bind<ICellsProvider>().To<CellsProvider>().AsSingle();
         }
     }
 }

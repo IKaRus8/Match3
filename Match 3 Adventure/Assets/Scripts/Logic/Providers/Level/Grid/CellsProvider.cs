@@ -1,94 +1,73 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 using Data.Interfaces.Models.Level;
-using Logic.Interfaces.Providers.Level;
-using Unity.Mathematics;
-using UnityEngine;
+using Logic.Interfaces.Providers.Level.Grid;
 
 namespace Logic.Providers.Level.Grid
 {
 	public class CellsProvider : ICellsProvider
 	{
-		private readonly Dictionary<int, List<ICell>> _columns;
-		private readonly Dictionary<int, List<ICell>> _rows;
-		
+		private ICell[,] _grid;
 		private int _size;
 
-		public CellsProvider()
+		public void Initialize(List<ICell> cells)
 		{
-			_columns = new Dictionary<int, List<ICell>>();
-			_rows = new Dictionary<int, List<ICell>>();
-		}
-
-		public void Initialize(ICell[] cells)
-		{
-			_size = (int)math.sqrt(cells.Length);
+			_size = (int)Math.Sqrt(cells.Count);
+			_grid = new ICell[_size, _size];
 
 			foreach (var cell in cells)
 			{
 				var x = cell.Index.x;
 				var y = cell.Index.y;
 
-				// Добавляем ячейку в словарь столбцов
-				if (!_columns.ContainsKey(x))
+				// Заполняем массив
+				if (x < 0 || x >= _size || y < 0 || y >= _size)
 				{
-					_columns[x] = new List<ICell>();
+					throw new IndexOutOfRangeException($"Некорректный индекс ячейки: ({x}, {y})");
 				}
-				
-				_columns[x].Add(cell);
 
-				// Добавляем ячейку в словарь строк
-				if (!_rows.ContainsKey(y))
-				{
-					_rows[y] = new List<ICell>();
-				}
-				
-				_rows[y].Add(cell);
+				_grid[x, y] = cell;
 			}
-			
-			Debug.Log($"Columns: {_columns.Count} \n Rows: {_rows.Count}");
 		}
+
+		public ICell this[int x, int y] => _grid[x, y];
 
 		public async IAsyncEnumerable<List<ICell>> GetAllColumnsAsync()
 		{
-			foreach (var key in _columns.Keys)
+			for (var x = 0; x < _size; x++)
 			{
-				yield return GetCellsInColumn(key);
-
-				await UniTask.Yield();
+				yield return GetColumn(x);
 			}
 		}
 
 		public async IAsyncEnumerable<List<ICell>> GetAllRowsAsync()
 		{
-			foreach (var key in _rows.Keys)
+			for (var y = 0; y < _size; y++)
 			{
-				yield return GetCellsInRow(key);
-
-				await UniTask.Yield();
+				yield return GetRow(y);
 			}
 		}
-
-		// Пример использования: получить все ячейки в столбце с индексом x
-		public List<ICell> GetCellsInColumn(int x)
+		
+		// Получить все ячейки в столбце
+		public List<ICell> GetColumn(int x)
 		{
-			if (_columns.TryGetValue(x, out var column))
+			var column = new List<ICell>();
+			for (var y = 0; y < _size; y++)
 			{
-				return column;
+				column.Add(_grid[x, y]);
 			}
-			
-			return new List<ICell>();
+			return column;
 		}
 
-		// Пример использования: получить все ячейки в строке с индексом y
-		public List<ICell> GetCellsInRow(int y)
+		// Получить все ячейки в строке
+		public List<ICell> GetRow(int y)
 		{
-			if (_rows.TryGetValue(y, out var row))
+			var row = new List<ICell>();
+			for (var x = 0; x < _size; x++)
 			{
-				return row;
+				row.Add(_grid[x, y]);
 			}
-			
-			return new List<ICell>();
+			return row;
 		}
 	}
 }

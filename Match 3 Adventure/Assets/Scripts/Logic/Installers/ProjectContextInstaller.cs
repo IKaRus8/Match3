@@ -8,6 +8,8 @@ namespace Logic.Installers
 	{
 		public override void InstallBindings()
 		{
+			//Services
+			Container.BindInterfacesTo<AssetService>().AsSingle();
 			Container.Bind<ISceneLoadService>().To<SceneLoadService>().AsSingle();
 		}
 	}

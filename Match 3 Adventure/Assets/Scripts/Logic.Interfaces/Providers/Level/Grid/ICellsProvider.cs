@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using Data.Interfaces.Models.Level;
-using Logic.Unity.Level.Grid;
 
-namespace Logic.Interfaces.Providers.Level
+namespace Logic.Interfaces.Providers.Level.Grid
 {
 	public interface ICellsProvider
 	{
-		List<ICell> GetCellsInColumn(int x);
-		List<ICell> GetCellsInRow(int y);
+		ICell this[int x, int y] { get; }
+
+		List<ICell> GetColumn(int x);
+		List<ICell> GetRow(int y);
 
 		IAsyncEnumerable<List<ICell>> GetAllColumnsAsync();
 		IAsyncEnumerable<List<ICell>> GetAllRowsAsync();
 
-		void Initialize(ICell[] cells);
+		void Initialize(List<ICell> cells);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Logic.Interfaces.Providers.Level;
+using Logic.Interfaces.Providers.Level.Grid;
 using Logic.Interfaces.Services.Level.Grid;
 using Unity.Netcode;
 using UnityEngine;
@@ -40,11 +41,11 @@ namespace Logic.Services.Level
 
 		private async UniTaskVoid ServerInitialization()
 		{
-			_gridController.Initialize();
+			var cells = _gridController.Initialize();
 
 			await UniTask.Yield();
 
-			_cellsProvider.Initialize(_gridController.Cells);
+			_cellsProvider.Initialize(cells);
 
 			await UniTask.Yield();
 
